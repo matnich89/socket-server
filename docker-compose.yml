@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+
+  server:
+    build: .
+    container_name: socket-server
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    environment:
+      TARGET_URL: "https://www.bbc.co.uk"
