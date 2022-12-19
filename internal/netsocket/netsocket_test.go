@@ -17,9 +17,6 @@ multiple requests might seem
 crazy, but I feel it gives
 confidence the server is able to handle
 multiple requests
-
-128 is the max number of connections that syscall.SOMAXCONN is set to
-on my machine
 */
 func TestServerOK(t *testing.T) {
 	startServer(t)
@@ -27,7 +24,7 @@ func TestServerOK(t *testing.T) {
 
 	var successfulRequests int32
 	wg := sync.WaitGroup{}
-	for i := 0; i < 128; i++ {
+	for i := 0; i < 50; i++ {
 		wg.Add(1)
 		go func(successfulRequests *int32, wg *sync.WaitGroup) {
 			req, err := http.NewRequest(http.MethodGet, "http://localhost:8889/?name=bob%20jones", nil)
@@ -45,7 +42,7 @@ func TestServerOK(t *testing.T) {
 		}(&successfulRequests, &wg)
 	}
 	wg.Wait()
-	require.Equal(t, int32(128), successfulRequests)
+	require.Equal(t, int32(50), successfulRequests)
 }
 
 func startServer(t *testing.T) {
